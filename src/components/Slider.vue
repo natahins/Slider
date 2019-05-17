@@ -3,7 +3,7 @@
       <div class="slider__container container">
           <p @click="goBack" class="container__arrow"><i class="left"></i></p>
           <div class="container__content">
-           <transition name="slide">
+           <transition :name="this.animateName">
            <div class="container__slide" :key="this.currentItem">
             <img :src="require('@/assets/'+ this.currentItem + '.jpg')">
            </div>
@@ -12,7 +12,9 @@
           <p @click="goNext" class="container__arrow"><i class="right"></i></p>
       </div>
       <div class="slider__dots dots">
-      <div v-for="(dot, index) in images" :key="index" class="dots__dot" @click="slideClickChange(index)"></div>
+      <div v-for="(dot, index) in images" :key="index" class="dots__dot" @click="slideClickChange(index)" v-bind:class="{ active: currentItem === index + 1 ? true : false }">
+          <div v-bind:class="{ active: currentItem === index }"></div>
+      </div>
       </div>
   </div>
 </template>
@@ -23,18 +25,24 @@ export default {
   data () {
     return {
       images: [1, 2, 3],
-      currentItem: 1
+      currentItem: 1,
+      animateName: 'slidenext',
+      activeItem: null
     }
   },
   methods: {
     goNext () {
+      this.animateName = 'slidenext'
       this.currentItem < this.images.length ? this.currentItem++ : this.currentItem = 1
     },
     goBack () {
+      this.animateName = 'slideback'
       this.currentItem > 1 ? this.currentItem-- : this.currentItem = this.images.length
     },
     slideClickChange (value) {
+      let oldItem = this.currentItem
       this.currentItem = value + 1
+      oldItem > this.currentItem ? this.animateName = 'slideback' : this.animateName = 'slidenext'
     }
   }
 }
@@ -77,7 +85,9 @@ export default {
         }
     }
 }
-
+.active {
+          background-color: aliceblue;
+        }
 i {
   border: solid black;
   border-width: 0 10px 10px 0;
@@ -105,14 +115,25 @@ i {
   }
 }
 
-.slide-leave-active,
-.slide-enter-active {
+.slidenext-leave-active,
+.slidenext-enter-active {
   transition: 1s;
 }
-.slide-enter {
+.slidenext-enter {
   transform: translate(100%, 0);
 }
-.slide-leave-to {
+.slidenext-leave-to {
   transform: translate(-100%, 0);
+}
+
+.slideback-leave-active,
+.slideback-enter-active {
+  transition: 1s;
+}
+.slideback-enter {
+  transform: translateX(-100%);
+}
+.slideback-leave-to {
+    transform: translateX(100%);
 }
 </style>
