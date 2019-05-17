@@ -13,7 +13,6 @@
       </div>
       <div class="slider__dots dots">
       <div v-for="(dot, index) in images" :key="index" class="dots__dot" @click="slideClickChange(index)" v-bind:class="{ active: currentItem === index + 1 ? true : false }">
-          <div v-bind:class="{ active: currentItem === index }"></div>
       </div>
       </div>
   </div>
