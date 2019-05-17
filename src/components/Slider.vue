@@ -25,8 +25,7 @@ export default {
     return {
       images: [1, 2, 3],
       currentItem: 1,
-      animateName: 'slidenext',
-      activeItem: null
+      animateName: 'slidenext'
     }
   },
   methods: {
