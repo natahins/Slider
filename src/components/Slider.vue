@@ -3,16 +3,16 @@
       <div class="slider__container container">
           <p @click="goBack" class="container__arrow"><i class="left"></i></p>
           <div class="container__content">
-           <transition :name="this.animateName">
-           <div class="container__slide" :key="this.currentItem">
-            <img :src="require('@/assets/'+ this.currentItem + '.jpg')">
+           <transition :name="animateName">
+           <div class="container__slide" :key="currentItem">
+            <img :src="currentImage">
            </div>
           </transition>
           </div>
           <p @click="goNext" class="container__arrow"><i class="right"></i></p>
       </div>
       <div class="slider__dots dots">
-      <div v-for="(dot, index) in images" :key="index" class="dots__dot" @click="slideClickChange(index)" v-bind:class="{ active: currentItem === index + 1 ? true : false }">
+      <div v-for="(dot, index) in images" :key="index" class="dots__dot" @click="slideClickChange(index)" v-bind:class="{ active: currentItem === index }">
       </div>
       </div>
   </div>
@@ -23,27 +23,51 @@ export default {
   name: 'Slider',
   data () {
     return {
-      images: [1, 2, 3],
-      currentItem: 1,
-      animateName: 'slidenext'
+      images: ['image_1', 'image_2', 'image_3'],
+      currentItem: 0,
+      animateName: ''
+    }
+  },
+  computed: {
+    currentImage () {
+      return require(`assets/${this.images[this.currentItem]}.jpg`)
+    }
+  },
+  watch: {
+    currentItem (newVal, oldVal) {
+      if ((newVal === this.images.length - 1 && oldVal === 0)) {
+        this.animateName = 'slideback'
+      } else if (newVal > oldVal || (newVal === 0 && oldVal === this.images.length - 1)) {
+        this.animateName = 'slidenext'
+      } else {
+        this.animateName = 'slideback'
+      }
     }
   },
   methods: {
     goNext () {
-      this.animateName = 'slidenext'
-      this.currentItem < this.images.length ? this.currentItem++ : this.currentItem = 1
+      if (this.currentItem < this.images.length - 1) {
+        this.currentItem++
+      } else {
+        this.currentItem = 0
+      }
     },
     goBack () {
-      this.animateName = 'slideback'
-      this.currentItem > 1 ? this.currentItem-- : this.currentItem = this.images.length
+      if (this.currentItem > 0) {
+        this.currentItem--
+      } else {
+        this.currentItem = this.images.length - 1
+      }
     },
     slideClickChange (value) {
-      let oldItem = this.currentItem
-      this.currentItem = value + 1
-      oldItem > this.currentItem ? this.animateName = 'slideback' : this.animateName = 'slidenext'
+      this.currentItem = value
+    },
+    setTime (func) {
+      setTimeout(func, 1000)
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

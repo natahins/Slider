@@ -8,12 +8,12 @@
 </template>
 
 <script>
-import SliderOld from './components/Slider_old'
+// import SliderOld from './components/Slider_old'
 import Slider from './components/Slider'
 export default {
   name: 'App',
   components: {
-    SliderOld,
+    // SliderOld,
     Slider
   }
 }
